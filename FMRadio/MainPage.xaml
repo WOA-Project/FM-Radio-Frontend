@@ -11,8 +11,6 @@
 	Loaded="PageLoaded"
 >
     <Page.Resources>
-        <local:FrequencyFormattingConverter x:Key="FrequencyFormatter" />
-
         <Style x:Key="TextBoxStyle1" TargetType="TextBox">
             <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}" />
             <Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}" />
@@ -221,9 +219,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Margin="8" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18"
-                       Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                       Text="" />
+            <FontIcon Grid.Column="0" Margin="8" VerticalAlignment="Center" FontSize="18"
+                      Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                      Glyph="" />
             <TextBlock x:Name="StationNameTextBlock" Grid.Column="1" Margin="8" VerticalAlignment="Center" TextWrapping="Wrap" />
 
             <SymbolIcon x:Name="SignalQualitySymbolIcon" Grid.Column="2" Margin="8" HorizontalAlignment="Right" Symbol="ZeroBars" />
@@ -263,14 +261,19 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Margin="0,-12" Padding="0,18,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   <!--<TextBox Margin="0,-12" Padding="0,18,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
                              Background="{x:Null}"
                              BorderBrush="{x:Null}"
                              BorderThickness="0" FontSize="100"
                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                              InputScope="Digits"
                              Style="{StaticResource TextBoxStyle1}"
-                             Text="{Binding FrequencyText, Mode=TwoWay, Converter={StaticResource FrequencyFormatter}}" />
+                             Text="{Binding FrequencyText, Mode=TwoWay, Converter={StaticResource FrequencyFormatter}}" />-->
+
+                    <TextBlock Margin="0,-12" Padding="0,18,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                             FontSize="100"
+                             Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                             Text="{x:Bind FrequencyText, Mode=OneWay}" />
 
                     <TextBlock Grid.Column="1" Margin="4,12" VerticalAlignment="Bottom" FontSize="50" Opacity="0.25" Text="MHz" TextLineBounds="TrimToBaseline" />
                 </Grid>

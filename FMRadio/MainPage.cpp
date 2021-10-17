@@ -315,69 +315,106 @@ namespace winrt::FMRadio::implementation
 		const auto MinorDivisionFrequencyOffset = MajorDivisionFrequencyOffset / 2;
 		const auto ThickMarkHeightScale = 0.5;
 		const auto ThinMarkHeightScale = 0.25;
-		const auto ThickMarkWidth = 4.0;
-		const auto ThinMarkWidth = 2.0;
+		const auto ThickMarkWidth = 3.0;
+		const auto ThinMarkWidth = 1.0;
 
 		TunerDial().Children().Clear();
 		TunerDial().Width(TunerWidth);
 
-		// The first half line
+		// start, and end, with a few lines
+		double X = -MajorDivisionFrequencyOffset;
+		while (X < TunerWidth + MajorDivisionFrequencyOffset + MajorDivisionFrequencyOffset)
+		{
+			// the text is only in the valid range
+			if (X >= 0 && X <= TunerWidth)
+			{
+				auto Frequency = Controls::Border();
+				{
+					auto Binding = Data::Binding();
+					Binding.Source(box_value(to_hstring(FrequencyOffsetConverter::ConvertBack(X))));
+					Binding.Converter(make<FMRadio::implementation::FrequencyFormattingConverter>());
+
+					auto FrequencyText = Controls::TextBlock();
+					FrequencyText.SetBinding(Controls::TextBlock::TextProperty(), Binding);
+					FrequencyText.VerticalAlignment(VerticalAlignment::Center);
+					FrequencyText.HorizontalAlignment(HorizontalAlignment::Center);
+
+					Frequency.Child(FrequencyText);
+				}
+
+				Frequency.SetValue(Controls::Canvas::TopProperty(), box_value(0));
+				Frequency.SetValue(Controls::Canvas::LeftProperty(), box_value(X - MajorDivisionFrequencyOffset / 2));
+				Frequency.SetValue(FrameworkElement::WidthProperty(), box_value(MajorDivisionFrequencyOffset));
+				Frequency.SetValue(FrameworkElement::HeightProperty(), box_value(TunerDial().ActualHeight() * ThickMarkHeightScale));
+				TunerDial().Children().Append(Frequency);
+
+				// the main line
+				{
+					auto Line = Shapes::Line();
+					Line.X1(X);
+					Line.X2(X);
+					Line.Y1(TunerDial().ActualHeight() * (1 - ThickMarkHeightScale));
+					Line.Y2(TunerDial().ActualHeight());
+					Line.Stroke(TunerWindow().Foreground());
+					Line.StrokeThickness(ThickMarkWidth);
+					TunerDial().Children().Append(Line);
+				}
+
+				// the half line
+				{
+					auto Line = Shapes::Line();
+					Line.X1(X - MinorDivisionFrequencyOffset);
+					Line.X2(X - MinorDivisionFrequencyOffset);
+					Line.Y1(TunerDial().ActualHeight() * (1 - ThinMarkHeightScale));
+					Line.Y2(TunerDial().ActualHeight());
+					Line.Stroke(TunerWindow().Foreground());
+					Line.StrokeThickness(ThinMarkWidth);
+					TunerDial().Children().Append(Line);
+				}
+			}
+			else
+			{
+				// the main line
+				{
+					auto Line = Shapes::Line();
+					Line.X1(X);
+					Line.X2(X);
+					Line.Y1(TunerDial().ActualHeight() * (1 - ThickMarkHeightScale));
+					Line.Y2(TunerDial().ActualHeight());
+					Line.Stroke(TunerWindow().Foreground());
+					Line.StrokeThickness(ThickMarkWidth);
+					Line.Opacity(0.25);
+					TunerDial().Children().Append(Line);
+				}
+
+				// the half line
+				{
+					auto Line = Shapes::Line();
+					Line.X1(X - MinorDivisionFrequencyOffset);
+					Line.X2(X - MinorDivisionFrequencyOffset);
+					Line.Y1(TunerDial().ActualHeight() * (1 - ThinMarkHeightScale));
+					Line.Y2(TunerDial().ActualHeight());
+					Line.Stroke(TunerWindow().Foreground());
+					Line.StrokeThickness(ThinMarkWidth);
+					Line.Opacity(0.25);
+					TunerDial().Children().Append(Line);
+				}
+			}
+
+			X += MajorDivisionFrequencyOffset;
+		}
+
+		// the last half line
 		{
 			auto Line = Shapes::Line();
-			Line.X1(-MinorDivisionFrequencyOffset);
-			Line.X2(-MinorDivisionFrequencyOffset);
+			Line.X1(X - MinorDivisionFrequencyOffset);
+			Line.X2(X - MinorDivisionFrequencyOffset);
 			Line.Y1(TunerDial().ActualHeight() * (1 - ThinMarkHeightScale));
 			Line.Y2(TunerDial().ActualHeight());
 			Line.Stroke(TunerWindow().Foreground());
 			Line.StrokeThickness(ThinMarkWidth);
+			Line.Opacity(0.25);
 			TunerDial().Children().Append(Line);
-		}
-
-		for (double X = 0; X < static_cast<int>(TunerWidth);)
-		{
-			auto Frequency = Controls::Border();
-			{
-				auto Binding = Data::Binding();
-				Binding.Source(box_value(to_hstring(FrequencyOffsetConverter::ConvertBack(X))));
-				Binding.Converter(make<FMRadio::implementation::FrequencyFormattingConverter>());
-
-				auto FrequencyText = Controls::TextBlock();
-				FrequencyText.SetBinding(Controls::TextBlock::TextProperty(), Binding);
-				FrequencyText.VerticalAlignment(VerticalAlignment::Center);
-
-				Frequency.Child(FrequencyText);
-			}
-
-			Frequency.SetValue(Controls::Canvas::TopProperty(), box_value(0));
-			Frequency.SetValue(Controls::Canvas::LeftProperty(), box_value(X - Frequency.ActualWidth() / 2));
-			Frequency.SetValue(FrameworkElement::HeightProperty(), box_value(TunerDial().ActualHeight() * ThickMarkHeightScale));
-			TunerDial().Children().Append(Frequency);
-
-			// the main line
-			{
-				auto Line = Shapes::Line();
-				Line.X1(X);
-				Line.X2(X);
-				Line.Y1(TunerDial().ActualHeight() * (1 - ThickMarkHeightScale));
-				Line.Y2(TunerDial().ActualHeight());
-				Line.Stroke(TunerWindow().Foreground());
-				Line.StrokeThickness(ThickMarkWidth);
-				TunerDial().Children().Append(Line);
-			}
-
-			// the half line
-			{
-				auto Line = Shapes::Line();
-				Line.X1(X + MinorDivisionFrequencyOffset);
-				Line.X2(X + MinorDivisionFrequencyOffset);
-				Line.Y1(TunerDial().ActualHeight() * (1 - ThinMarkHeightScale));
-				Line.Y2(TunerDial().ActualHeight());
-				Line.Stroke(TunerWindow().Foreground());
-				Line.StrokeThickness(ThinMarkWidth);
-				TunerDial().Children().Append(Line);
-			}
-
-			X += MajorDivisionFrequencyOffset;
 		}
 	}
 

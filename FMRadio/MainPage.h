@@ -3,8 +3,6 @@
 #include "MainPage.g.h"
 #include "Native API/Zune Media/Zune API.h"
 #include "Native API/Miniport/Miniport API.h"
-#include "Converters/ActualWidth Halving Converter.h"
-#include "Converters/Frequency Formatting Converter.h"
 
 namespace winrt::FMRadio::implementation
 {

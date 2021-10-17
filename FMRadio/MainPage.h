@@ -4,6 +4,7 @@
 #include "Native API/Zune Media/Zune API.h"
 #include "Native API/Miniport/Miniport API.h"
 #include "Converters/ActualWidth Halving Converter.h"
+#include "Converters/Frequency Formatting Converter.h"
 
 namespace winrt::FMRadio::implementation
 {
@@ -33,6 +34,7 @@ namespace winrt::FMRadio::implementation
 		void TunerWindowScrolled(Windows::Foundation::IInspectable const &, Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs const &);
 		void TunerDialLoaded(Windows::Foundation::IInspectable const &, Windows::UI::Xaml::RoutedEventArgs const &);
 		void TunerWindowScrolled(Windows::Foundation::IInspectable const &, Windows::Foundation::IInspectable const &);
+		void TunerWindowLayout(Windows::Foundation::IInspectable const&, Windows::Foundation::IInspectable const&);
 
 		winrt::event_token PropertyChanged(Windows::UI::Xaml::Data::PropertyChangedEventHandler const &);
 		void PropertyChanged(winrt::event_token const &);

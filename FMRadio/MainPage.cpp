@@ -272,6 +272,12 @@ namespace winrt::FMRadio::implementation
 	{
 	}
 
+	void MainPage::TunerWindowLayout(Windows::Foundation::IInspectable const&, Windows::Foundation::IInspectable const&)
+	{
+		double margin = TunerWindow().ActualWidth() / 2;
+		TunerDial().Margin({ margin, 0, margin, 0 });
+	}
+
 	void MainPage::TunerWindowScrolled(Windows::Foundation::IInspectable const &, Windows::UI::Xaml::Controls::ScrollViewerViewChangedEventArgs const & Event)
 	{
 		// Ideally we only want to update when everything has settled, and the ScrollView is no longer moving

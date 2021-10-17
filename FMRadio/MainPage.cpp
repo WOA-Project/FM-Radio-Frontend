@@ -34,6 +34,7 @@ namespace winrt::FMRadio::implementation
 			c.PlaybackStatus(Windows::Media::MediaPlaybackStatus::Playing);
 		}
 
+#if !defined(_DEBUG) || (defined(_M_ARM) || defined(_M_ARM64))
 		RadioAPI::Radio->OnPlayed = [this] {
 			Windows::ApplicationModel::Core::CoreApplication::MainView().CoreWindow().Dispatcher().RunAsync(
 				Windows::UI::Core::CoreDispatcherPriority::Normal,
@@ -120,6 +121,7 @@ namespace winrt::FMRadio::implementation
 			Windows::UI::Popups::MessageDialog msg(L"Unknown error");
 			msg.ShowAsync();
 		}
+#endif
 	}
 
 	void MainPage::PageLoaded(const Windows::Foundation::IInspectable &, const Windows::UI::Xaml::RoutedEventArgs &)

@@ -104,6 +104,9 @@ void App::OnLaunched(LaunchActivatedEventArgs const & Event)
 
 void App::NavigateDependingOnInitialisation(Frame & RootFrame)
 {
+#if defined(_DEBUG) && !(defined(_M_ARM) || defined(_M_ARM64))
+    RootFrame.Navigate(xaml_typename<FMRadio::MainPage>());
+#else
 	try
 	{
 		Radio.OnAntennaInserted = [this] {
@@ -135,6 +138,7 @@ void App::NavigateDependingOnInitialisation(Frame & RootFrame)
 	{
 		RootFrame.Navigate(xaml_typename<FMRadio::UnsupportedDevicePage>(), box_value(L"Unknown error"));
 	}
+#endif
 }
 
 /// <summary>
